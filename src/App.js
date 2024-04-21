@@ -1,4 +1,4 @@
-import { Children, useState } from "react";
+import { useState } from "react";
 import "./app.css";
 
 export default function App() {
@@ -31,6 +31,14 @@ export default function App() {
         travel is a pretty cool thing to think about. Who knows what we'll
         discover next!
       </TextExpander>
+
+      <TextExpander
+        buttonColor="gray"
+        collapsedNumWords={2}
+        backgroundColor="skyblue"
+      >
+        Hello my name is Binayak chhetri. I'm 21 years old.
+      </TextExpander>
     </div>
   );
 }
@@ -38,30 +46,41 @@ export default function App() {
 function TextExpander({
   children,
   collapsedNumWords = 5,
-  expandButtonText = "... Show more ",
-  collapseButtonText = "... Show less",
+  expandButtonText = "Show more ",
+  collapseButtonText = "Show less",
   buttonColor = "blue",
   expanded = false,
   className,
+  backgroundColor = "white",
 }) {
   const [expandText, setExpandText] = useState(expanded);
   function handleExpandText() {
     setExpandText(!expandText);
   }
 
+  // Setting whether to display the full text or not.
+  const displayText = expandText
+    ? children
+    : children?.split(" ").slice(0, collapsedNumWords).join(" ") + "... ";
+
+  const buttonText = expandText ? collapseButtonText : expandButtonText;
+
+  const btnStyle = {
+    color: buttonColor,
+    background: "none",
+    border: "none",
+    font: "inherit",
+    cursor: "pointer",
+    marginLeft: "6px",
+  };
+
   return (
     <div className={className}>
-      {expandText ? children : children.split(" ", collapsedNumWords).join(" ")}
+      <span>{displayText}</span>
 
-      {expandText ? (
-        <span style={{ color: buttonColor }} onClick={handleExpandText}>
-          {collapseButtonText}
-        </span>
-      ) : (
-        <span style={{ color: buttonColor }} onClick={handleExpandText}>
-          {expandButtonText}
-        </span>
-      )}
+      <button style={btnStyle} onClick={handleExpandText}>
+        {buttonText}
+      </button>
     </div>
   );
 }
